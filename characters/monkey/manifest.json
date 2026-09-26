@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Monkey",
+    "description": "A cute, round, chubby baby monkey cub hanging from a jungle creeper (vine), gripping the vine with both hands above its head, plump round belly, big round expressive eyes, short stubby arms and legs, small curled tail, soft brown fur with a lighter tan face and belly."
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "monkey.png",
+    "width": 1024,
+    "height": 1024,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

@@ -59,7 +59,7 @@ The v1 flow is:
 1. `main.png` (or similar) — the character hanging from a long web/rope/thread/similar element, transparent background, composed so that:
    - There is an identifiable, consistent **anchor point** (e.g. top of the thread) that maps to a fixed pixel/percentage coordinate in the image, used later to attach the pendulum pivot.
    - The character's body hangs naturally below that anchor, in a "hanging/dangling" default pose.
-2. `expressions.png` — a **3×3 grid sprite sheet**, 9 equally-sized cells, each cell = one expression/pose of the same character, same art style/proportions/framing as the main artwork so swaps look seamless. The 9 expressions:
+2. `expressions.png` — **deferred, not currently produced by the automated pipeline** (see [Section 7, item 2](#7-open-questions--decisions-needed) for why). Intended design, kept here for when it's revisited: a **3×3 grid sprite sheet**, 9 equally-sized cells, each cell = one expression/pose of the same character, same art style/proportions/framing as the main artwork so swaps look seamless. The 9 expressions:
    1. Hi / Hello
    2. Happy
    3. Love
@@ -105,18 +105,18 @@ The v1 flow is:
 These are unresolved and should be revisited with the user before/while building:
 
 1. **Image generation backend** — which model/tool actually produces `main.png` / `expressions.png`? (This session has access to Highsfield image-generation MCP tools — need to confirm that's the intended generator, or if there's another preferred pipeline/API.)
-2. **Consistency across the 9 expression cells and the main pose** — same-model multi-image consistency is hard. Do we generate the 3×3 sheet as a single image-gen call (one prompt producing a grid) or 9 separate calls + manual compositing? Need a chosen strategy since it affects manifest format and QA.
+2. ~~Consistency across the 9 expression cells and the main pose~~ — **attempted and deferred**: tried both a single-call 3×3 grid (`images.generate()`) and an `images.edit()` call using the real `main.png` bytes as the reference image, with increasingly explicit prompting (matching fill-ratio, thread length, "do not zoom in"). Neither reliably held scale — the model consistently "zoomed in" to fill each grid cell, shrinking the thread/enlarging the character relative to the main pose, so runtime swaps visibly jumped. The 9-separate-calls-plus-manual-compositing option (generate each expression at `main.png`'s own full 1024×1024 size, then downscale/paste into the grid ourselves in code) was identified as the likely real fix, since it makes the scale-down a deterministic code operation instead of a model decision — but it's ~9x the generation cost per character and hasn't been built. For now, expression-sheet generation is **removed from the automated pipeline** (`skills/page-swingly` only outputs `main.png` + `manifest.json`); `HangingCharacter` already treats `expressions` as optional, so characters just hang/swing with no face-swapping until this is revisited.
 3. **Anchor point detection** — is the anchor point specified by the generation prompt/convention (e.g. always top-center of canvas) or does the pipeline need to detect it post-generation (e.g. via image analysis)?
 4. **Rendering approach for the rope/thread** — pre-rendered as part of the generated image vs. drawn dynamically by the runtime (SVG/canvas line) so its length can be configured/animated. (Dynamic thread is likely better for the "configurable thread length + pendulum" requirement — main character art may need to exclude the thread and just expose the anchor point instead.)
 5. **Physics engine choice** for the NPM package — hand-rolled simple pendulum math vs. a library (e.g. Matter.js) — affects bundle size vs. development speed.
 6. **Priority/sequencing** — build order between the generation pipeline and the NPM package (can be developed somewhat in parallel using placeholder/mock assets for the package).
-7. ~~Where `skills/spiderman-example` fits~~ — resolved: `skills/spiderman-example` is the Spider-Man reference implementation (owner: VR), used to validate the generic design end-to-end. See [Section 10](#10-example-use-case-reference-implementation).
+7. ~~Where `skills/spiderman-example` fits~~ — superseded: Spider-Man was dropped as the reference character (see [Section 10](#10-example-use-case-reference-implementation)) before that skill was ever built. `skills/page-swingly` is the actual generator, validated end-to-end against several other reference characters instead.
 
 ## 8. Success criteria
 
 **V1 (MVP) bar — must hit this first:**
 - Given a hand-produced asset set (`main.png` + expression files) for the reference character, a developer can `npm install` the package, point it at those assets, and get a working hanging + expression-swapping character on an already-running page by pasting only a couple of lines of setup code — no custom rendering code, no manual coordinate math.
-- Swapping between the 9 expressions looks visually seamless (consistent style/scale/position).
+- Swapping between the 9 expressions looks visually seamless (consistent style/scale/position). **Not met for the automated pipeline** — see [Section 7, item 2](#7-open-questions--decisions-needed); the package itself supports expression-swapping fine (it's optional per-character), but the generator currently can't produce a matching sheet, so no shipped character has one.
 
 **Later / full-vision bar:**
 - A developer can supply a character name + description and get back a usable asset set (main art + expression sheet + manifest) without manual image editing.
@@ -135,19 +135,11 @@ These are unresolved and should be revisited with the user before/while building
 
 ## 10. Example Use Case (Reference Implementation)
 
-Everything above (Sections 1–9) is written generically on purpose — the design must not special-case any one character. To validate it end-to-end, the first concrete character we're building is **Spider-Man**, as a proof-of-concept hanging character.
+Everything above (Sections 1–9) is written generically on purpose — the design must not special-case any one character. **Spider-Man** was the originally planned proof-of-concept character but was dropped early: the OpenAI Images API's safety system rejects recognizable copyrighted/trademarked characters outright (`moderation_blocked`), and no amount of prompt rewording is an appropriate way around that. `skills/spiderman-example` referenced below was never actually built as a result.
 
-- **Character:** Spider-Man, red/blue suit, hanging from a long web strand.
-- **Hang point:** top of the web strand, anchored near the top corner of the page.
-- **Illustrative expression mapping** (using the same 9 generic categories from Section 6.1, applied to this character):
-  - Hi / Hello → friendly wave
-  - Happy → thumbs up
-  - Love → heart-hands
-  - Surprise → wide-eyed shock pose
-  - Cool → arms crossed, confident stance
-  - Confused → head tilt / question-mark pose
-  - Sleepy → drooping posture, half-closed eyes
-  - Charming → wink
-  - Waving → mid-wave motion
-- **Where it lives:** this reference build is being implemented in [skills/spiderman-example](../skills/spiderman-example), owned separately (VR), as the first working example of the generic system described above.
-- **Purpose:** prove out the asset contract (anchor point, sprite sheet layout, manifest) and the runtime behavior (hang, swing, react) on a real character before generalizing further. It is a test case for the design, not a special case within it.
+The real reference characters, generated end-to-end through the working pipeline, live in `characters/` — a mix of non-anthropomorphic charms (`nimbu-mirchi`, a lemon-and-chili protective charm; `evil-eye-horseshoe`; `nazar-battu`) and animal mascots (`panda`, `webster` the spider), validating character-agnosticism across both categories called out in Section 3.
+
+- **Hang point:** every character shares the same convention — anchored near the top of the frame via a thread/rope/web, normalized anchor point `(0.5, 0.05)` in the manifest.
+- **Expression mapping:** not currently applicable — expression-sheet generation is deferred (see [Section 7, item 2](#7-open-questions--decisions-needed)), so shipped characters are main-pose-only.
+- **Where it lives:** the generator is [skills/page-swingly](../skills/page-swingly); the NPM package + demo site (which renders these characters live) is [swingly](../swingly).
+- **Purpose:** prove out the asset contract (anchor point, manifest) and the runtime behavior (hang, swing, react, drag) on real characters before generalizing further. These are test cases for the design, not special cases within it.

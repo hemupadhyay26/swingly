@@ -100,20 +100,21 @@ new HangingCharacter({
 {
   "character": { "name": "Blip Solo", "description": "..." },
   "main": {
-    "file": "main.png",
+    "file": "blip-solo.png",
     "width": 1024,
     "height": 1024,
     "anchorPoint": { "x": 0.5, "y": 0.05 }
-  },
-  "expressions": {
-    "file": "expressions.png",
-    "width": 1024,
-    "height": 1024,
-    "grid": { "rows": 3, "cols": 3 },
-    "map": { "hi": 0, "happy": 1, "love": 2, "surprise": 3, "cool": 4, "confused": 5, "sleepy": 6, "charming": 7, "waving": 8 }
   }
 }
 ```
+
+`main.file` can be any image format/filename the browser can render — the runtime
+just resolves it against `baseUrl`, it never assumes a specific name or extension.
+`page-swingly` currently outputs `<slug>.png`; a served/deployed copy may convert that
+to WEBP as a separate export step, which needs no runtime code change since the
+manifest just points at whatever file actually exists. An optional `expressions`
+block (3x3 sprite sheet + label→index map) is also supported for characters that have
+one, but `page-swingly` doesn't currently generate one — see its README for why.
 
 ## Local development
 

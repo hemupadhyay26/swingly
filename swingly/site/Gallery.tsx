@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
 
 // Resolved against Vite's configured `base` (defaults to "/"), so this keeps
 // working if the site ever gets deployed under a subpath (e.g. GitHub Pages
@@ -15,7 +16,7 @@ interface CharacterEntry {
   manifest: Manifest;
 }
 
-function Card({ slug, manifest, index }: CharacterEntry & { index: number }) {
+function Card({ slug, manifest, index, onOpen }: CharacterEntry & { index: number; onOpen: () => void }) {
   const name = manifest.character?.name || slug;
   const style = {
     "--swing-duration": `${2.6 + (index % 5) * 0.25}s`,
@@ -24,19 +25,48 @@ function Card({ slug, manifest, index }: CharacterEntry & { index: number }) {
 
   return (
     <article className="card">
-      <div className="card-media">
+      <button type="button" className="card-media card-media-btn" onClick={onOpen} aria-label={`Open ${name}`}>
         {manifest.main?.file && (
           <img src={`${CHARACTERS_DIR}/${slug}/${manifest.main.file}`} alt={name} style={style} />
         )}
         <div className="name-pill">{name}</div>
-      </div>
+      </button>
     </article>
+  );
+}
+
+function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () => void }) {
+  const name = entry.manifest.character?.name || entry.slug;
+  const file = entry.manifest.main?.file;
+  const imageUrl = file ? `${CHARACTERS_DIR}/${entry.slug}/${file}` : null;
+
+  return (
+    <div className="download-backdrop" onClick={onClose}>
+      <aside className="download-panel" onClick={(e) => e.stopPropagation()}>
+        <button type="button" className="download-panel-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        {imageUrl && (
+          <div className="download-panel-preview">
+            <img src={imageUrl} alt={name} />
+          </div>
+        )}
+        <h3 className="download-panel-name">{name}</h3>
+        {imageUrl && (
+          <a className="gh-btn download-panel-btn" href={imageUrl} download={file}>
+            <Download size={16} />
+            <span>Download {file?.split(".").pop()?.toUpperCase()}</span>
+          </a>
+        )}
+      </aside>
+    </div>
   );
 }
 
 export function Gallery() {
   const [characters, setCharacters] = useState<CharacterEntry[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<CharacterEntry | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -93,10 +123,13 @@ export function Gallery() {
   }
 
   return (
-    <div className="grid">
-      {characters.map((entry, index) => (
-        <Card key={entry.slug} index={index} {...entry} />
-      ))}
-    </div>
+    <>
+      <div className="grid">
+        {characters.map((entry, index) => (
+          <Card key={entry.slug} index={index} {...entry} onOpen={() => setSelected(entry)} />
+        ))}
+      </div>
+      {selected && <DownloadPanel entry={selected} onClose={() => setSelected(null)} />}
+    </>
   );
 }

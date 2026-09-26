@@ -28,9 +28,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(
         prog="page-swingly",
-        description="Generate a Swingly character asset set (main.png + expressions.png + manifest.json) via the OpenAI Images API.",
+        description="Generate a Swingly character asset set (<slug>.png + manifest.json) via the OpenAI Images API.",
     )
-    parser.add_argument("--name", required=True, help="Character name, e.g. 'Spider-Man'")
+    parser.add_argument("--name", required=True, help="Character name, e.g. 'Panda'")
     parser.add_argument("--description", required=True, help="Free-text visual description of the character")
     parser.add_argument(
         "--out",
@@ -48,11 +48,6 @@ def build_parser() -> argparse.ArgumentParser:
         default=default_quality,
         choices=["low", "medium", "high"],
         help=f"Image quality tier (default: {default_quality}, from OPENAI_IMAGE_QUALITY if set)",
-    )
-    parser.add_argument(
-        "--skip-expressions",
-        action="store_true",
-        help="Only generate main.png (skip the 3x3 expressions.png sheet)",
     )
     return parser
 
@@ -77,10 +72,8 @@ def main() -> None:
         size=args.size,
         model=args.model,
         quality=args.quality,
-        include_expressions=not args.skip_expressions,
     )
 
     print(f"Generating '{request.name}' -> {request.out_dir}")
     manifest_path = generate_character(client, request)
-    written = "main.png, manifest.json" if args.skip_expressions else "main.png, expressions.png, manifest.json"
-    print(f"Done. Wrote {written} to {manifest_path.parent}")
+    print(f"Done. Wrote {out_dir.name}.png, manifest.json to {manifest_path.parent}")

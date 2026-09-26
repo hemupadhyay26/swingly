@@ -18,17 +18,3 @@ def main_pose_prompt(name: str, description: str) -> str:
         "the character to run off the top or bottom edge of the square "
         "canvas if needed. Transparent background, centered horizontally."
     )
-
-
-def expression_sheet_prompt(name: str, description: str) -> str:
-    moods = "Hi/Hello, Happy, Love, Surprise, Cool, Confused, Sleepy, Charming, Waving"
-    return (
-        f"{name}: {description}. {ART_STYLE} "
-        "A single sprite sheet split into a 3x3 grid of 9 equal cells, filled "
-        "left-to-right, top-to-bottom, the same subject each time in the same "
-        f"style and framing, just shifting mood across the 9 cells: {moods} — "
-        "expressed however feels natural for the subject, whether that's a "
-        "pose or expression, or a more stylized cue like glow, sparkle, "
-        "motion, or a shift in shape. Transparent background, no grid lines "
-        "or text anywhere in the image."
-    )

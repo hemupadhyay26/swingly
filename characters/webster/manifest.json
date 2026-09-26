@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Webster",
+    "description": "A friendly, round-bodied cartoon spider with big cute expressive eyes and eight small legs, dangling naturally from a single silvery strand of silk that it spun from above, the way a real spider hangs from its own web thread."
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "webster.png",
+    "width": 1024,
+    "height": 1024,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

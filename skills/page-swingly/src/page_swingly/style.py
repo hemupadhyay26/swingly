@@ -2,7 +2,10 @@
 
 These values must stay in sync with the asset contract described in
 `.claude/PRD.md` (Sections 3.1 and 6.1): a `main.png` with a fixed anchor
-point, and a 3x3 `expressions.png` grid with a fixed row-major label order.
+point. Expression-sheet generation was removed — see git history if it needs
+to come back — since independent/edited generations couldn't reliably match
+`main.png`'s exact scale (the model kept "zooming in" to fill each grid
+cell), so `HangingCharacter` characters are main-pose-only for now.
 """
 
 ART_STYLE = (
@@ -10,19 +13,6 @@ ART_STYLE = (
     "poses, squash-and-stretch animation aesthetics, bold clean outlines, "
     "vintage cel shading, playful slapstick character design."
 )
-
-# Row-major, left-to-right, top-to-bottom order for the 3x3 expression grid.
-EXPRESSION_LABELS = [
-    "hi",
-    "happy",
-    "love",
-    "surprise",
-    "cool",
-    "confused",
-    "sleepy",
-    "charming",
-    "waving",
-]
 
 # Normalized (0-1) point on `main.png` where the runtime's dynamic thread
 # should visually attach.

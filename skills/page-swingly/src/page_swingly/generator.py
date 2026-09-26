@@ -6,8 +6,8 @@ from pathlib import Path
 from openai import OpenAI
 from PIL import Image
 
-from .prompts import expression_sheet_prompt, main_pose_prompt
-from .style import ANCHOR_POINT, ART_STYLE, DEFAULT_MODEL, DEFAULT_QUALITY, EXPRESSION_LABELS
+from .prompts import main_pose_prompt
+from .style import ANCHOR_POINT, ART_STYLE, DEFAULT_MODEL, DEFAULT_QUALITY
 
 
 @dataclass
@@ -18,10 +18,12 @@ class CharacterRequest:
     size: int = 1024
     model: str = DEFAULT_MODEL
     quality: str = DEFAULT_QUALITY
-    include_expressions: bool = True
 
 
 def _generate_image(client: OpenAI, model: str, prompt: str, size: int, quality: str) -> bytes:
+    # Kept as PNG (the API default) on purpose: this is the raw/source generation
+    # output, not what ships to the site. Converting to WEBP happens later, only when
+    # exporting assets into the public/served location — not here.
     result = client.images.generate(
         model=model,
         prompt=prompt,
@@ -33,7 +35,7 @@ def _generate_image(client: OpenAI, model: str, prompt: str, size: int, quality:
     return base64.b64decode(result.data[0].b64_json)
 
 
-def _save_png(data: bytes, path: Path) -> tuple[int, int]:
+def _save_image(data: bytes, path: Path) -> tuple[int, int]:
     path.write_bytes(data)
     with Image.open(path) as img:
         return img.size
@@ -42,7 +44,10 @@ def _save_png(data: bytes, path: Path) -> tuple[int, int]:
 def generate_character(client: OpenAI, request: CharacterRequest) -> Path:
     request.out_dir.mkdir(parents=True, exist_ok=True)
 
-    main_path = request.out_dir / "main.png"
+    # Named after the character's own slug (the output directory's name) rather than
+    # the generic "main", so the asset file is self-describing on its own — e.g.
+    # characters/panda/panda.png instead of characters/panda/main.png.
+    main_path = request.out_dir / f"{request.out_dir.name}.png"
     manifest_path = request.out_dir / "manifest.json"
 
     main_bytes = _generate_image(
@@ -50,7 +55,7 @@ def generate_character(client: OpenAI, request: CharacterRequest) -> Path:
         main_pose_prompt(request.name, request.description),
         request.size, request.quality,
     )
-    main_size = _save_png(main_bytes, main_path)
+    main_size = _save_image(main_bytes, main_path)
 
     manifest = {
         "character": {
@@ -65,22 +70,6 @@ def generate_character(client: OpenAI, request: CharacterRequest) -> Path:
             "anchorPoint": ANCHOR_POINT,
         },
     }
-
-    if request.include_expressions:
-        expressions_path = request.out_dir / "expressions.png"
-        expr_bytes = _generate_image(
-            client, request.model,
-            expression_sheet_prompt(request.name, request.description),
-            request.size, request.quality,
-        )
-        expr_size = _save_png(expr_bytes, expressions_path)
-        manifest["expressions"] = {
-            "file": expressions_path.name,
-            "width": expr_size[0],
-            "height": expr_size[1],
-            "grid": {"rows": 3, "cols": 3},
-            "map": {label: i for i, label in enumerate(EXPRESSION_LABELS)},
-        }
 
     manifest_path.write_text(json.dumps(manifest, indent=2))
     _update_characters_index(request.out_dir.parent)

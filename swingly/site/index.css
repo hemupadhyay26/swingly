@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --bg: #F7F2EB;
   --surface: #EAE2D6;
@@ -40,6 +42,15 @@ h1, h2 {
   align-items: flex-start;
   justify-content: center;
   gap: 16px;
+}
+
+.hero-title-anchor {
+  display: inline-block;
+  /* Reserves room above the title for the hanging character (mounted here via
+     `mountTarget`), which is positioned with a negative offset so it dangles above
+     the text — without this, that space doesn't exist and it renders off the top of
+     the page instead. */
+  margin-top: 160px;
 }
 
 .hero-copy h1 {
@@ -146,7 +157,23 @@ header code {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.card-media img {
+.card-media-btn {
+  width: 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.card-media-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.card-media img,
+.download-panel-preview img {
   max-width: 100%;
   max-height: 130px;
   object-fit: contain;
@@ -209,7 +236,101 @@ header code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card-media img {
+  .card-media img,
+  .download-panel-preview img {
+    animation: none !important;
+  }
+}
+
+/* Download panel */
+
+.download-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(20, 18, 12, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fade-in 0.15s ease;
+}
+
+.download-panel {
+  position: relative;
+  z-index: 1000;
+  width: min(360px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: pop-in 0.18s ease;
+}
+
+.download-panel-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--surface-alt);
+  color: var(--text);
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.download-panel-preview {
+  width: 100%;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.download-panel-preview img {
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.download-panel-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.download-panel-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.94); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .download-backdrop,
+  .download-panel {
     animation: none !important;
   }
 }

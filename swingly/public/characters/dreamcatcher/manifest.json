@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Dreamcatcher",
+    "description": "A traditional dreamcatcher in shades of yellow and gold: a circular woven web frame wrapped in golden-yellow cord, decorated with small yellow and amber beads woven into the web, with several long cream and yellow feathers and beads hanging down from the bottom of the hoop. Render it as a plain, naturalistic decorative object - no face, not anthropomorphized, just the dreamcatcher itself with detailed woven web texture and soft feather texture."
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "dreamcatcher.webp",
+    "width": 1024,
+    "height": 1024,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}
