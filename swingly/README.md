@@ -1,12 +1,15 @@
 # swingly
 
 A tiny character that hangs off the corner of your page, swings like a pendulum, and
-reacts when a visitor hovers, clicks, or drags it. Framework-agnostic core, with a thin
-React wrapper included.
+responds with real physics when you drag and release it. Framework-agnostic core, with
+a thin React wrapper included.
 
 This package is asset-driven: point it at a `manifest.json` produced by
 [`skills/page-swingly`](../skills/page-swingly) (or any manifest matching the same shape)
-and it renders, swings, and reacts — no per-character code required.
+and it renders, drags, and swings — no per-character code required. If the manifest
+also includes an optional `expressions` sprite sheet, hover/click/idle reactions layer
+on top automatically (see "What it does" below) — but this isn't something
+`page-swingly` currently generates, so it's opt-in via a hand-made manifest.
 
 ## Install
 

@@ -26,7 +26,7 @@ export function Hero() {
         <div className="hero-title-anchor" ref={setTitleEl}>
           <h1>/Swingly</h1>
         </div>
-        <p>A tiny character that lives on your page. It swings gently and reacts when you poke it.</p>
+        <p>A tiny character that lives on your page and swings gently.</p>
         <a
           className="gh-btn"
           href="https://github.com/hemupadhyay26/swingly"

@@ -1,7 +1,7 @@
 {
   "name": "swingly",
   "version": "0.1.0",
-  "description": "A tiny character that hangs off the corner of your page, swings like a pendulum, and reacts when poked.",
+  "description": "A tiny character that hangs off the corner of your page and swings like a pendulum.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
