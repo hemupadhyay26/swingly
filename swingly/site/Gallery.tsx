@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check, Copy, Download } from "lucide-react";
+import { Check, Copy, Download, Plus } from "lucide-react";
 
 // Resolved against Vite's configured `base` (defaults to "/"), so this keeps
 // working if the site ever gets deployed under a subpath (e.g. GitHub Pages
@@ -184,6 +184,17 @@ export function Gallery() {
         {characters.map((entry, index) => (
           <Card key={entry.slug} index={index} {...entry} onOpen={() => setSelected(entry)} />
         ))}
+        <a
+          className="card contribute-card"
+          href="https://github.com/hemupadhyay26/swingly/blob/main/CONTRIBUTING.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <div className="contribute-card-media">
+            <Plus size={28} />
+            <div className="contribute-tooltip">Contribute your creation</div>
+          </div>
+        </a>
       </div>
       {selected && <DownloadPanel entry={selected} onClose={() => setSelected(null)} />}
     </>
