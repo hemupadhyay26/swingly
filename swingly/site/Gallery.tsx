@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Check, Copy, Download, Plus } from "lucide-react";
+import { Highlight, type Language } from "prism-react-renderer";
+import { codeTheme } from "./codeTheme";
 
 // Resolved against Vite's configured `base` (defaults to "/"), so this keeps
 // working if the site ever gets deployed under a subpath (e.g. GitHub Pages
@@ -35,7 +37,7 @@ function Card({ slug, manifest, index, onOpen }: CharacterEntry & { index: numbe
   );
 }
 
-function CodeBlock({ code }: { code: string }) {
+function CodeBlock({ code, language }: { code: string; language: Language }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -50,9 +52,21 @@ function CodeBlock({ code }: { code: string }) {
 
   return (
     <div className="code-block">
-      <pre>
-        <code>{code}</code>
-      </pre>
+      <Highlight code={code} language={language} theme={codeTheme}>
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className} style={style}>
+            <code>
+              {tokens.map((line, lineIndex) => (
+                <div key={lineIndex} {...getLineProps({ line })}>
+                  {line.map((token, tokenIndex) => (
+                    <span key={tokenIndex} {...getTokenProps({ token })} />
+                  ))}
+                </div>
+              ))}
+            </code>
+          </pre>
+        )}
+      </Highlight>
       <button
         type="button"
         className="code-block-copy"
@@ -94,7 +108,7 @@ function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () 
         <ol className="setup-guide">
           <li>
             <span>Install swingly</span>
-            <CodeBlock code="npm install swingly" />
+            <CodeBlock code="npm install swingly" language="bash" />
           </li>
           <li>
             <span>
@@ -111,7 +125,10 @@ function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () 
           </li>
           <li>
             <span>Mount it</span>
-            <CodeBlock code={`<HangingCharacterWidget\n  assets="${assetsPath}"\n  corner="top-right"\n/>`} />
+            <CodeBlock
+              code={`import { HangingCharacterWidget } from "swingly/react";\n\n<HangingCharacterWidget\n  assets="${assetsPath}"\n  corner="top-right"\n/>`}
+              language="jsx"
+            />
           </li>
         </ol>
       </aside>

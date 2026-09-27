@@ -8,6 +8,10 @@
   --text: #2E2D28;
   --text-muted: #5B5A50;
   --radius: 16px;
+  /* Fixed (not theme-dependent) so code blocks always read as a distinct
+     "terminal" surface instead of blending into --surface-alt in light mode. */
+  --code-bg: #15140F;
+  --code-text: #F0ECE2;
   color-scheme: light;
 }
 
@@ -600,7 +604,7 @@ header code {
 .setup-guide pre {
   margin: 0;
   padding: 10px 36px 10px 12px;
-  background: var(--surface-alt);
+  background: var(--code-bg);
   border-radius: 8px;
   overflow-x: auto;
   white-space: pre-wrap;
@@ -608,7 +612,7 @@ header code {
 }
 
 .setup-guide pre code {
-  color: var(--text);
+  color: var(--code-text);
 }
 
 .code-block {
@@ -626,15 +630,15 @@ header code {
   justify-content: center;
   border: none;
   border-radius: 6px;
-  background: var(--surface);
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--code-text);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .code-block-copy:hover {
-  background: var(--bg);
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .download-panel-btn {
