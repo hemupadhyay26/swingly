@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download } from "lucide-react";
+import { Check, Copy, Download } from "lucide-react";
 
 // Resolved against Vite's configured `base` (defaults to "/"), so this keeps
 // working if the site ever gets deployed under a subpath (e.g. GitHub Pages
@@ -35,10 +35,42 @@ function Card({ slug, manifest, index, onOpen }: CharacterEntry & { index: numbe
   );
 }
 
+function CodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard access can fail (permissions, insecure context) - not worth surfacing
+    }
+  };
+
+  return (
+    <div className="code-block">
+      <pre>
+        <code>{code}</code>
+      </pre>
+      <button
+        type="button"
+        className="code-block-copy"
+        onClick={handleCopy}
+        aria-label={copied ? "Copied" : "Copy to clipboard"}
+      >
+        {copied ? <Check size={14} /> : <Copy size={14} />}
+      </button>
+    </div>
+  );
+}
+
 function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () => void }) {
   const name = entry.manifest.character?.name || entry.slug;
   const file = entry.manifest.main?.file;
   const imageUrl = file ? `${CHARACTERS_DIR}/${entry.slug}/${file}` : null;
+  const manifestUrl = `${CHARACTERS_DIR}/${entry.slug}/manifest.json`;
+  const assetsPath = `/characters/${entry.slug}/manifest.json`;
 
   return (
     <div className="download-backdrop" onClick={onClose}>
@@ -58,6 +90,30 @@ function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () 
             <span>Download .{file?.split(".").pop()?.toLowerCase()}</span>
           </a>
         )}
+
+        <ol className="setup-guide">
+          <li>
+            <span>Install swingly</span>
+            <CodeBlock code="npm install swingly" />
+          </li>
+          <li>
+            <span>
+              Download the{" "}
+              <a href={imageUrl ?? "#"} download={file}>
+                image
+              </a>{" "}
+              and the{" "}
+              <a href={manifestUrl} download="manifest.json">
+                manifest.json
+              </a>{" "}
+              into <code>public/characters/{entry.slug}/</code> in your project
+            </span>
+          </li>
+          <li>
+            <span>Mount it</span>
+            <CodeBlock code={`<HangingCharacterWidget\n  assets="${assetsPath}"\n  corner="top-right"\n/>`} />
+          </li>
+        </ol>
       </aside>
     </div>
   );

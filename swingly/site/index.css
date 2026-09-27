@@ -52,7 +52,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-  padding: 32px 16px 64px;
+  padding: 0 16px 64px;
 }
 
 h1,
@@ -66,15 +66,15 @@ h2 {
 
 .hero {
   max-width: 1100px;
-  /* Fills the first screenful on load (viewport height minus body's own
-     top/bottom padding), so the hero is the only thing visible before
+  /* Touches the very top of the page (body's top padding removed) and fills
+     the full viewport height, so the hero is the only thing visible before
      scrolling. */
-  min-height: calc(100vh - 96px);
+  min-height: 60vh;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 16px;
   text-align: center;
 }
@@ -85,7 +85,7 @@ h2 {
      `mountTarget`), which is positioned with a negative offset so it dangles above
      the text — without this, that space doesn't exist and it renders off the top of
      the page instead. */
-  margin-top: 160px;
+  margin-top: 120px;
 }
 
 .hero-copy h1 {
@@ -107,7 +107,6 @@ h2 {
   justify-content: center;
   gap: 12px;
   margin-top: 16px;
-  margin-bottom: 160px;
 }
 
 .gh-btn {
@@ -150,6 +149,52 @@ h2 {
 
 .hero-btn-primary:hover {
   background: color-mix(in srgb, var(--accent) 85%, black);
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .hero-copy h1 {
+    font-size: 56px;
+  }
+
+  .hero-copy p {
+    font-size: 16px;
+    max-width: 340px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .hero-copy h1 {
+    font-size: 36px;
+  }
+
+  .hero-copy p {
+    font-size: 15px;
+    max-width: 280px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .gh-btn {
+    font-size: 13px;
+    padding: 9px 14px;
+    justify-content: center;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .download-panel {
+    padding: 24px 16px 16px;
+  }
 }
 
 /* Section header */
@@ -320,7 +365,7 @@ header code {
 .download-panel {
   position: relative;
   z-index: 1000;
-  width: min(360px, 100%);
+  width: min(520px, 100%);
   max-height: 85vh;
   overflow-y: auto;
   background: var(--bg);
@@ -333,6 +378,12 @@ header code {
   align-items: center;
   gap: 16px;
   animation: pop-in 0.18s ease;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.download-panel::-webkit-scrollbar {
+  display: none;
 }
 
 .download-panel-close {
@@ -370,6 +421,92 @@ header code {
   font-size: 18px;
   font-weight: 600;
   text-align: center;
+}
+
+.setup-guide {
+  width: 100%;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: setup-step;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.setup-guide li {
+  counter-increment: setup-step;
+  position: relative;
+  padding-left: 30px;
+}
+
+.setup-guide li::before {
+  content: counter(setup-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.setup-guide li>span {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.setup-guide code {
+  font-size: 12px;
+}
+
+.setup-guide pre {
+  margin: 0;
+  padding: 10px 36px 10px 12px;
+  background: var(--surface-alt);
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.setup-guide pre code {
+  color: var(--text);
+}
+
+.code-block {
+  position: relative;
+}
+
+.code-block-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.code-block-copy:hover {
+  background: var(--bg);
+  color: var(--text);
 }
 
 .download-panel-btn {
