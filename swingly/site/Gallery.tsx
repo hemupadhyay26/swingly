@@ -55,7 +55,7 @@ function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () 
         {imageUrl && (
           <a className="gh-btn download-panel-btn" href={imageUrl} download={file}>
             <Download size={16} />
-            <span>Download {file?.split(".").pop()?.toUpperCase()}</span>
+            <span>Download .{file?.split(".").pop()?.toLowerCase()}</span>
           </a>
         )}
       </aside>

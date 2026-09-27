@@ -55,8 +55,11 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.48.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
@@ -65,9 +68,15 @@
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "lucide-react": "^1.48.0",
-    "tailwind-merge": "^3.7.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hemupadhyay26/swingly.git"
+  },
+  "homepage": "https://github.com/hemupadhyay26/swingly#readme",
+  "bugs": {
+    "url": "https://github.com/hemupadhyay26/swingly/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
