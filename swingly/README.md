@@ -23,13 +23,13 @@ npm install swingly
 import { HangingCharacter } from "swingly";
 
 const char = new HangingCharacter({
-  assets: "/characters/blip-solo/manifest.json",
+  assets: "/characters/panda/manifest.json",
   corner: "top-right",
   threadLength: 140,
 });
 
 await char.mount(document.body);
-char.on("click", () => char.setExpression("surprise"));
+char.on("dragend", () => console.log("released - now settling like a pendulum"));
 ```
 
 ## Usage (React)
@@ -40,9 +40,8 @@ import { HangingCharacterWidget } from "swingly/react";
 function App() {
   return (
     <HangingCharacterWidget
-      assets="/characters/blip-solo/manifest.json"
+      assets="/characters/panda/manifest.json"
       corner="top-right"
-      reactions={{ hover: "hi", click: "random" }}
     />
   );
 }
@@ -101,9 +100,9 @@ new HangingCharacter({
 
 ```json
 {
-  "character": { "name": "Blip Solo", "description": "..." },
+  "character": { "name": "Panda", "description": "..." },
   "main": {
-    "file": "blip-solo.png",
+    "file": "panda.png",
     "width": 1024,
     "height": 1024,
     "anchorPoint": { "x": 0.5, "y": 0.05 }
@@ -128,16 +127,7 @@ npm run typecheck
 ```
 
 ```bash
-npm run dev          # Vite dev server for site/, a live demo against ../characters
-```
-
-## Publishing
-
-This directory is a self-contained package — everything under `swingly/` is published;
-nothing from `characters/`, `site/`, or `skills/` is required at runtime or included in
-the published tarball (see the `files` field in `package.json`). From this directory:
-
-```bash
-npm run build
-npm publish
+npm run dev          # Vite dev server for site/, a live demo against public/characters
+npm run build:site   # builds site/ to site-build/ (what .github/workflows/pages.yml deploys)
+npm run preview      # serve that build locally to sanity-check it before deploying
 ```
