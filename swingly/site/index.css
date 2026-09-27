@@ -220,8 +220,19 @@ h2 {
   background: color-mix(in srgb, var(--accent) 85%, black);
 }
 
-/* Tablet */
-@media (max-width: 768px) {
+/* Tablet (also covers iPad portrait/landscape - iPad Pro 12.9" lands at
+   1366px wide in landscape, wider than the usual 1024px tablet cutoff) */
+@media (max-width: 1400px) {
+  .hero {
+    /* Same reasoning as the mobile override below - 60vh is tuned for
+       desktop and leaves a large empty gap on tablet-height viewports. */
+    min-height: auto;
+  }
+
+  .hero-actions {
+    margin-bottom: 24px;
+  }
+
   .hero-copy h1 {
     font-size: 56px;
   }

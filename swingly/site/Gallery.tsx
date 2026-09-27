@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Check, Copy, Download, Plus } from "lucide-react";
 import { Highlight, type Language } from "prism-react-renderer";
 import { codeTheme } from "./codeTheme";
+import { Skeleton } from "./Skeleton";
 
 // Resolved against Vite's configured `base` (defaults to "/"), so this keeps
 // working if the site ever gets deployed under a subpath (e.g. GitHub Pages
@@ -182,7 +183,11 @@ export function Gallery() {
   if (characters === null) {
     return (
       <div className="grid">
-        <p className="status">Loading characters…</p>
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="card">
+            <Skeleton className="h-[110px] w-full" />
+          </div>
+        ))}
       </div>
     );
   }
