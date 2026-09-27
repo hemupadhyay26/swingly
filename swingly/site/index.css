@@ -14,6 +14,34 @@
 
 html {
   background: var(--bg);
+  scroll-behavior: smooth;
+  scrollbar-color: var(--accent) var(--bg);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 999px;
+  border: 3px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 80%, black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -35,13 +63,17 @@ h1, h2 {
 
 .hero {
   max-width: 1100px;
-  min-height: 22vh;
+  /* Fills the first screenful on load (viewport height minus body's own
+     top/bottom padding), so the hero is the only thing visible before
+     scrolling. */
+  min-height: calc(100vh - 96px);
   margin: 0 auto 40px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 16px;
+  text-align: center;
 }
 
 .hero-title-anchor {
@@ -54,24 +86,31 @@ h1, h2 {
 }
 
 .hero-copy h1 {
-  font-size: 34px;
+  font-size: 88px;
   font-weight: 700;
 }
 
 .hero-copy p {
   margin: 10px 0 0;
-  max-width: 380px;
+  max-width: 420px;
   color: var(--text-muted);
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.5;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .gh-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 16px;
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--accent);
@@ -97,6 +136,16 @@ h1, h2 {
 .gh-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.hero-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.hero-btn-primary:hover {
+  background: color-mix(in srgb, var(--accent) 85%, black);
 }
 
 /* Section header */

@@ -4,6 +4,10 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  // GitHub Pages project sites are served under /<repo-name>/, not /. The CI
+  // workflow sets BASE_PATH=/swingly/ when building for deployment; local
+  // dev/build defaults to "/" so `npm run dev` still works at the site root.
+  base: process.env.BASE_PATH || "/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

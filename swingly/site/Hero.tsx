@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GitBranch } from "lucide-react";
+import { ChevronDown, GitBranch } from "lucide-react";
 import { HangingCharacterWidget } from "../src/react";
 
 /**
@@ -27,16 +27,22 @@ export function Hero() {
           <h1>/Swingly</h1>
         </div>
         <p>A tiny character that lives on your page and swings gently.</p>
-        <a
-          className="gh-btn"
-          href="https://github.com/hemupadhyay26/swingly"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="View Swingly on GitHub"
-        >
-          <GitBranch size={16} />
-          <span>GitHub</span>
-        </a>
+        <div className="hero-actions">
+          <a className="gh-btn hero-btn-primary" href="#already-drawn">
+            <span>Use Already Generated</span>
+            <ChevronDown size={16} />
+          </a>
+          <a
+            className="gh-btn"
+            href="https://github.com/hemupadhyay26/swingly"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="View Swingly on GitHub"
+          >
+            <GitBranch size={16} />
+            <span>GitHub</span>
+          </a>
+        </div>
       </div>
     </section>
   );
