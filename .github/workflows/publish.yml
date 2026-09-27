@@ -35,15 +35,14 @@ jobs:
         working-directory: swingly
         run: npm run build
 
-      - name: Verify tag matches package.json version
+      - name: Set version from tag
         working-directory: swingly
-        run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          PKG_VERSION="$(node -p "require('./package.json').version")"
-          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
-            echo "Tag v$TAG_VERSION does not match package.json version $PKG_VERSION"
-            exit 1
-          fi
+        # The pushed tag (e.g. v1.0.0) is the single source of truth for the
+        # published version - no local `npm version` bump needed beforehand.
+        # This only rewrites package.json in this CI checkout for the
+        # publish step below; it isn't committed back to the repo, so the
+        # committed package.json can drift from what's actually on npm.
+        run: npm version --no-git-tag-version --allow-same-version "${GITHUB_REF_NAME#v}"
 
       - name: Publish to npm
         working-directory: swingly
