@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Potion Bottle",
+    "description": "small rounded violet glass potion bottle containing luminous turquoise liquid, a cork stopper, tiny golden star flecks inside, a brass collar around the bottle neck with a decorative loop for the upper cord, no face or limbs"
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "potion-bottle.webp",
+    "width": 1254,
+    "height": 1254,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Wind Chime",
+    "description": "decorative wind chime with five varied bamboo tubes and small copper bells beneath a curved wooden canopy, natural wood grain and warm copper highlights, canopy has a top loop for the upper cord, no face or limbs"
+  },
+  "style": "Realistic product photography with natural material textures, soft studio lighting, believable reflections, and a transparent background.",
+  "main": {
+    "file": "wind-chime.webp",
+    "width": 1254,
+    "height": 1254,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

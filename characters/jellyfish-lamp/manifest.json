@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Jellyfish Lamp",
+    "description": "translucent aqua jellyfish-shaped decorative lamp with a rounded glass bell, softly glowing lavender and turquoise tentacles, a small brass top loop for the upper cord, no added face"
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "jellyfish-lamp.png",
+    "width": 1254,
+    "height": 1254,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

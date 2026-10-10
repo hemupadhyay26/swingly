@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Origami Crane",
+    "description": "elegant folded indigo paper origami crane with fine gold edges, clearly visible paper creases and wide angular wings, delicate fastening loop above the folded body connects to the upper cord, no cartoon face or limbs"
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "origami-crane.webp",
+    "width": 1254,
+    "height": 1254,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

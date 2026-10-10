@@ -5,6 +5,11 @@ def main_pose_prompt(name: str, description: str) -> str:
     thread_pct = round(THREAD_LENGTH_FRACTION * 100)
     return (
         f"{name}: {description}. {ART_STYLE} "
+        "Create a playful decorative website mascot or charm. Preserve the "
+        "requested details; choose an attachment suited to the subject. "
+        "A living character can actively grip a prop with hands or paws; "
+        "an object can use its natural loop or fastening. Do not add a face "
+        "or limbs to an object unless requested. "
         "Show it hanging naturally, as if suspended from a thread, web, rope, "
         "or string attached near the top of the frame. The thread should be "
         f"clearly visible and span roughly the top {thread_pct}% of the "
