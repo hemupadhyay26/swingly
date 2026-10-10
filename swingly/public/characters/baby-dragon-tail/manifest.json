@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Baby Dragon Tail",
+    "description": "tiny mint-green baby dragon with cream belly, small peach wings and round amber eyes, playfully gripping a golden ring with its strong prehensile tail securely coiled twice around the ring, the ring attaches to the upper cord, its body is below the tail grip with head tilted upward and both front claws free, clearly show tail as the sole support rather than hands holding the ring"
+  },
+  "style": "Classic hand-drawn 2D theatrical cartoon style, expressive exaggerated poses, squash-and-stretch animation aesthetics, bold clean outlines, vintage cel shading, playful slapstick character design.",
+  "main": {
+    "file": "baby-dragon-tail.webp",
+    "width": 1254,
+    "height": 1254,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

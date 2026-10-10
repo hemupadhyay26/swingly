@@ -13,6 +13,8 @@ import shutil
 from pathlib import Path
 
 from PIL import Image
+from .errors import run_cli
+from .ui import HelpParser, message, status
 
 # .../totaka/skills/page-swingly/src/page_swingly/publish.py -> .../totaka
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
@@ -48,6 +50,13 @@ def _publish_character(char_dir: Path) -> str:
 
 
 def main() -> None:
+    parser = HelpParser(description="Publish character assets to the demo site.")
+    parser.add_argument("--debug", action="store_true", help="Show a traceback for troubleshooting.")
+    args = parser.parse_args()
+    run_cli(_main, debug=args.debug)
+
+
+def _main() -> None:
     if DEST_DIR.is_symlink() or DEST_DIR.exists():
         if DEST_DIR.is_symlink():
             DEST_DIR.unlink()
@@ -59,12 +68,13 @@ def main() -> None:
     for char_dir in sorted(SOURCE_DIR.iterdir()):
         if not char_dir.is_dir() or not (char_dir / "manifest.json").is_file():
             continue
-        slug = _publish_character(char_dir)
+        with status(f"Publishing {char_dir.name}..."):
+            slug = _publish_character(char_dir)
         slugs.append(slug)
-        print(f"published {slug} -> swingly/public/characters/{slug}/")
+        message(f"published {slug} -> swingly/public/characters/{slug}/")
 
     (DEST_DIR / "index.json").write_text(json.dumps(slugs, indent=2))
-    print(f"Done. Published {len(slugs)} character(s) to {DEST_DIR}")
+    message(f"Done. Published {len(slugs)} character(s) to {DEST_DIR}", style="green")
 
 
 if __name__ == "__main__":

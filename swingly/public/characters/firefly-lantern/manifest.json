@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Firefly Lantern",
+    "description": "small antique brass and clear glass lantern containing several golden glowing fireflies, warm light reflected on the glass panes, curved brass top handle attached to the upper cord, no face or limbs"
+  },
+  "style": "Realistic product photography with natural material textures, soft studio lighting, believable reflections, and a transparent background.",
+  "main": {
+    "file": "firefly-lantern.webp",
+    "width": 1254,
+    "height": 1254,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}

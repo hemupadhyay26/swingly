@@ -22,9 +22,42 @@ By default this writes to `<project root>/characters/<slugified-name>/` (e.g.
 `characters/panda/`) so every generated character lands in one place at the root
 of the project. Pass `--out <dir>` to override the location.
 
-Avoid recognizable copyrighted/trademarked characters (e.g. "Spider-Man") as
-`--name`/`--description` input — the OpenAI Images API's safety system rejects those
-outright (`moderation_blocked`), and there's no legitimate way to prompt around it.
+The prompt preserves the planned artwork structure: the existing cartoon style,
+75% visible cord, independent character scale, allowed edge cropping, transparent
+background, and shared anchor point. Additional wording clarifies appropriate grips
+and fastenings for different subjects without changing those constraints.
+
+Prefer original subjects and descriptions you have permission to use. A moderation
+rejection does not establish that copyright was the cause. All three commands show
+short error messages with a next step, plus API error identifiers when available.
+Use `--debug` for a local traceback; review it before sharing API details.
+
+## API keys or a Codex subscription
+
+The default `api` provider keeps the existing OpenAI Images API workflow and its
+model/quality configuration. API usage has separate billing from ChatGPT Pro.
+
+Set `PAGE_SWINGLY_PROVIDER=codex` in `.env`, or pass `--provider codex`, to
+run the installed Codex CLI's built-in image generator and import its PNG in one step.
+Install Codex in the same shell where you run this command and sign in with ChatGPT
+using `codex login`. Set `PAGE_SWINGLY_CODEX_BIN` if the executable is not on PATH.
+
+```bash
+uv run page-swingly --provider codex --name "Panda" --description "panda gripping bamboo"
+```
+
+This checks ChatGPT login, runs Codex in an isolated temporary directory with a
+workspace-write sandbox, then imports its transparent PNG into the unchanged asset
+pipeline. The art prompt and manifest contract remain the same. No API key is passed
+to Codex; no paid API fallback or retry of refusals is attempted. The built-in image
+tool must be available in your Codex CLI session. This integration is covered by
+mocked tests; actual generation depends on CLI availability and subscription limits.
+
+Use `--image /path/to/image.png`
+to import an existing transparent PNG. Model and quality flags configure only API
+requests; Codex uses its available built-in controls. See
+[authentication](https://learn.chatgpt.com/docs/auth) and
+[image usage and pricing](https://learn.chatgpt.com/docs/pricing).
 
 The entry point lives in `src/page_swingly/swingly.py` — that's the starting point of
 the project's generation pipeline.
@@ -60,3 +93,13 @@ uv run page-swingly-publish
 This converts each character's PNG to WEBP (lossless) and writes the result into
 `swingly/public/characters/<slug>/`, along with a copy of `manifest.json` pointing at
 the new `.webp` file. The entry point lives in `src/page_swingly/publish.py`.
+
+## Terminal interface
+
+The existing commands use Rich for prompt panels, generation/import/publish spinners,
+colored success messages, and concise error panels on stderr. Redirected output stays
+plain, without animations or terminal controls. Names and descriptions are rendered
+literally, including square brackets. Existing flags, composition, output, and provider
+behavior stay the same. No additional interactive questions are required.
+
+Run `uv sync` after updating to install Rich, then use your usual commands.

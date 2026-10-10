@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 
 from PIL import Image
+from .errors import run_cli
+from .ui import HelpParser, message, panel
 
 # .../totaka/skills/page-swingly/src/page_swingly/validate.py -> .../totaka
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
@@ -27,11 +29,17 @@ def validate_character(char_dir: Path, errors: list[str], *, require_source_nami
 
     try:
         manifest = json.loads(manifest_path.read_text())
-    except json.JSONDecodeError as e:
+    except (json.JSONDecodeError, OSError, UnicodeError) as e:
         errors.append(f"{slug}: manifest.json is not valid JSON ({e})")
         return
 
+    if not isinstance(manifest, dict):
+        errors.append(f'{slug}: manifest.json must be a JSON object')
+        return
     character = manifest.get("character") or {}
+    if not isinstance(character, dict):
+        errors.append(f'{slug}: "character" must be a JSON object')
+        return
     if not character.get("name") or not character.get("description"):
         errors.append(f'{slug}: manifest.json\'s "character" needs both "name" and "description"')
 
@@ -40,12 +48,16 @@ def validate_character(char_dir: Path, errors: list[str], *, require_source_nami
         errors.append(f'{slug}: manifest.json is missing "main"')
         return
 
+    if not isinstance(main, dict):
+        errors.append(f'{slug}: "main" must be a JSON object')
+        return
+
     missing = REQUIRED_MAIN_FIELDS - main.keys()
     if missing:
         errors.append(f'{slug}: manifest.json\'s "main" is missing {sorted(missing)}')
 
     anchor = main.get("anchorPoint") or {}
-    if "x" not in anchor or "y" not in anchor:
+    if not isinstance(anchor, dict) or "x" not in anchor or "y" not in anchor:
         errors.append(f"{slug}: main.anchorPoint needs both x and y")
 
     image_name = main.get("file")
@@ -81,10 +93,17 @@ def validate_character(char_dir: Path, errors: list[str], *, require_source_nami
 
 
 def main() -> None:
+    parser = HelpParser(description="Validate source and published character assets.")
+    parser.add_argument("--debug", action="store_true", help="Show a traceback for troubleshooting.")
+    args = parser.parse_args()
+    run_cli(_main, debug=args.debug)
+
+
+def _main() -> None:
     errors: list[str] = []
 
     if not SOURCE_DIR.is_dir():
-        print("No characters/ directory found - nothing to validate.")
+        message("No characters/ directory found - nothing to validate.")
         return
 
     index_path = SOURCE_DIR / "index.json"
@@ -117,12 +136,10 @@ def main() -> None:
         errors.append(f"characters/index.json references folders that don't exist: {sorted(stale_in_index)}")
 
     if errors:
-        print(f"Found {len(errors)} problem(s):\n")
-        for e in errors:
-            print(f"  - {e}")
+        panel("\n".join(f"- {error}" for error in errors), title=f"Validation: {len(errors)} problem(s)", error=True)
         sys.exit(1)
 
-    print(f"All {len(dir_slugs)} character(s) look good.")
+    message(f"All {len(dir_slugs)} character(s) look good.", style="green")
 
 
 if __name__ == "__main__":
