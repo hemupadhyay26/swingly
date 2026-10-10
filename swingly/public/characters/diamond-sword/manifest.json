@@ -1,0 +1,16 @@
+{
+  "character": {
+    "name": "Diamond Sword",
+    "description": "A classic 8-bit retro video game pixel art sword pointing straight down. The blade is made of vibrant cyan and teal pixels, and the crossguard and hilt are dark green and brown. At the top, the sword's pommel is securely attached to a thick, silver metal chain extending upwards."
+  },
+  "style": "8-bit retro video game pixel art.",
+  "main": {
+    "file": "diamond-sword.webp",
+    "width": 1024,
+    "height": 1024,
+    "anchorPoint": {
+      "x": 0.5,
+      "y": 0.05
+    }
+  }
+}
