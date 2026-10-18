@@ -30,14 +30,14 @@ export function Hero() {
         threadLength={24}
         width={120}
       />
-      <div className="hero-copy">
+      <div className="hero-copy"><span className="hero-eyebrow"><span /> A LITTLE JOY FOR THE WEB</span>
         <div className="hero-title-anchor" ref={setTitleEl}>
           <h1>/Swingly</h1>
         </div>
-        <p>A tiny character that lives on your page and swings gently.</p>
+        <h2 className="hero-tagline">Give your page a little personality.</h2><p>Tiny companions. Real physics. A playful little detail<br className="desktop-break" /> that makes your corner of the internet feel like you.</p>
         <div className="hero-actions">
           <a className="gh-btn hero-btn-primary" href="#already-drawn">
-            <span>Use Already Generated</span>
+            <span>Meet the characters</span>
             <ChevronDown size={16} />
           </a>
           <a
@@ -51,6 +51,7 @@ export function Hero() {
             <span>GitHub</span>
           </a>
         </div>
+        <span className="hero-footnote">Open source · Framework agnostic · Delightfully lightweight</span>
       </div>
     </section>
   );

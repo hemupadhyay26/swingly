@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Copy, Download, Plus } from "lucide-react";
 import { Highlight, type Language } from "prism-react-renderer";
 import { codeTheme } from "./codeTheme";
@@ -30,7 +30,7 @@ function Card({ slug, manifest, index, onOpen }: CharacterEntry & { index: numbe
     <article className="card">
       <button type="button" className="card-media card-media-btn" onClick={onOpen} aria-label={`Open ${name}`}>
         {manifest.main?.file && (
-          <img src={`${CHARACTERS_DIR}/${slug}/${manifest.main.file}`} alt={name} style={style} />
+          <img src={`${CHARACTERS_DIR}/${slug}/${manifest.main.file}`} alt={name} loading="lazy" decoding="async" style={style} />
         )}
         <div className="name-pill">{name}</div>
       </button>
@@ -81,6 +81,32 @@ function CodeBlock({ code, language }: { code: string; language: Language }) {
 }
 
 function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () => void }) {
+  const panelRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+      if (event.key !== "Tab") return;
+      const elements = panelRef.current?.querySelectorAll<HTMLElement>('button, a[href]');
+      if (!elements?.length) return;
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKey);
+      previousFocus?.focus();
+    };
+  }, []);
   const name = entry.manifest.character?.name || entry.slug;
   const file = entry.manifest.main?.file;
   const imageUrl = file ? `${CHARACTERS_DIR}/${entry.slug}/${file}` : null;
@@ -89,7 +115,7 @@ function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () 
 
   return (
     <div className="download-backdrop" onClick={onClose}>
-      <aside className="download-panel" onClick={(e) => e.stopPropagation()}>
+      <aside ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="character-dialog-title" className="download-panel" onClick={(e) => e.stopPropagation()}>
         <button type="button" className="download-panel-close" onClick={onClose} aria-label="Close">
           ×
         </button>
@@ -98,7 +124,7 @@ function DownloadPanel({ entry, onClose }: { entry: CharacterEntry; onClose: () 
             <img src={imageUrl} alt={name} />
           </div>
         )}
-        <h3 className="download-panel-name">{name}</h3>
+        <h3 id="character-dialog-title" className="download-panel-name">{name}</h3>
         {imageUrl && (
           <a className="gh-btn download-panel-btn" href={imageUrl} download={file}>
             <Download size={16} />
